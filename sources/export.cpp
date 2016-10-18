@@ -35,12 +35,12 @@ int james(int x) {
 
 
 // [[Rcpp::export]]
-List CheapDataFrameBuilder(List a) {
+List as_data_frame(List a) {
   List returned_frame = clone(a);
   GenericVector sample_row = returned_frame(0);
   
   StringVector row_names(sample_row.length());
-  for (int i = 0; i < sample_row.length(); ++i) {
+  for (int i = 0; i < sample_row.length(); i++) {
     char name[5];
     sprintf(&(name[0]), "%d", i);
     row_names(i) = name;
