@@ -36,12 +36,9 @@ List as_data_frame(List a) {
 }
 
 // [[Rcpp::export]]
-int return_size(List x) {
+NumericVector return_size(List x) {
   List y = clone(x);
-  NumericVector m = y(0);
-  return m.size();
+  NumericVector m = NumericVector::create(1.2);
+  return m;
 }
-
-
-
 
