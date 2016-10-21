@@ -4,7 +4,6 @@ library(Rcpp)
 library(microbenchmark)
 library(rbenchmark)
 
-
 # url <- "https://raw.githubusercontent.com/jwyatt85/random_code/master/sources/export.cpp"
 # destfile <- paste0(tempdir(), "/mysource.cpp")
 # 
@@ -22,15 +21,6 @@ microbenchmark(
   as.data.frame(a), 
   as_data_frame(a)
 )
-
-
-x = list(test = c(1,2,3,4), test2= c(2,3,3,2))
-
-x <- return_names(x)
-x
-
-y <- c(1,2,3,4)
-calculateSum(y)
 
 runthis()
 

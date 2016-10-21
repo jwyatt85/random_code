@@ -40,7 +40,7 @@ List as_data_frame(List a) {
 
 
 // [[Rcpp::export]]
-void runthis(){
+RObject runthis(){
 
   Rcpp::List x = Rcpp::List::create(
     NumericVector::create(4,2,5), 
@@ -56,14 +56,15 @@ void runthis(){
   for(list_it m = x.begin(); m != x.end(); ++m){
     check_vec = *m;
     for(num_it yay = check_vec.begin(); yay != check_vec.end(); ++yay){
-      if(*yay == 0){
+      if(*yay == 5){
+        *yay = 9;
         my_it = *yay;
         Rcout << " The number now is: " << my_it;
       }
     }
   }
+  return x;
 }
-
   
 
 
