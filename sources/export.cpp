@@ -7,6 +7,8 @@
 #include <time.h>
 #include <R.h>
 #include <Rmath.h>
+#include <iostream>
+#include <list>
 
 using namespace Rcpp;
 
@@ -35,18 +37,38 @@ List as_data_frame(List a) {
   return returned_frame;
 }
 
-// [[Rcpp::export]]
-RObject return_names(List my_vec) {
-  List test = clone(my_vec);
-  CharacterVector i = my_vec.names();
-  
-  for(int m = 0; m < i.size(); m++)
-  {
-    i[m] = "Test1";
-  }
-  
-  test.names() = i;
 
-  return test;
+
+// [[Rcpp::export]]
+void runthis(){
+
+  Rcpp::List x = Rcpp::List::create(
+    NumericVector::create(4,2,5), 
+    NumericVector::create(23),
+    NumericVector::create(1));
+  
+  int my_it;
+  
+  Rcpp::NumericVector check_vec;
+  typedef Rcpp::List::iterator list_it;
+  typedef Rcpp::NumericVector::iterator num_it;
+  
+  for(list_it m = x.begin(); m != x.end(); ++m){
+    check_vec = *m;
+    
+    for(num_it yay = check_vec.begin(); yay != check_vec.end(); ++yay){
+      my_it = *yay;
+      Rcout << my_it;
+    }
+
+    // if(my_it == 1){
+    //   *m = "wut";
+    // }
+  }
+  // return x;
+  
 }
+
+
+
 
