@@ -11,30 +11,6 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector convolveCpp(NumericVector a, NumericVector b) {
-  int na = a.size(), nb = b.size();
-  int nab = na + nb - 1;
-  NumericVector xab(nab);
-  for (int i = 0; i < na; i++)
-    for (int j = 0; j < nb; j++)
-      xab[i + j] += a[i] * b[j];
-  return xab;
-}
-
-// [[Rcpp::export]]
-int james(int x) {
-  if(x > 5) {
-    x = x* 5;
-    return(std::cout << "The Value is: " << x);
-  }
-  else {
-    x = x + 5;
-    return(x);
-  }
-}
-
-
-// [[Rcpp::export]]
 List as_data_frame(List a) {
   List returned_frame = clone(a);
   GenericVector sample_row = returned_frame(0);
@@ -58,3 +34,14 @@ List as_data_frame(List a) {
   
   return returned_frame;
 }
+
+// [[Rcpp::export]]
+int return_size(List x) {
+  List y = clone(x);
+  NumericVector m = y(0);
+  return m.size();
+}
+
+
+
+
