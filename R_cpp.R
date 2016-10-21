@@ -24,3 +24,7 @@ microbenchmark(
 
 runthis()
 
+#returns dataframes1
+m <- as.data.frame(a)
+m2 <- as_data_frame(a)
+

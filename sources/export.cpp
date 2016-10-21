@@ -13,7 +13,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List as_data_frame(List a) {
+Rcpp::DataFrame as_data_frame(List a) {
   List returned_frame = clone(a);
   GenericVector sample_row = returned_frame(0);
   
@@ -37,15 +37,15 @@ List as_data_frame(List a) {
   return returned_frame;
 }
 
-
-
 // [[Rcpp::export]]
 RObject runthis(){
 
   Rcpp::List x = Rcpp::List::create(
     NumericVector::create(4,2,5), 
-    NumericVector::create(23),
-    NumericVector::create(1));
+    NumericVector::create(2,3,5,5,5,5),
+    NumericVector::create(1,4,6,5,4,5,5,5,5,5),
+    CharacterVector::create("eke", "woo")
+  );
   
   int my_it;
   
@@ -59,7 +59,7 @@ RObject runthis(){
       if(*yay == 5){
         *yay = 9;
         my_it = *yay;
-        Rcout << " The number now is: " << my_it;
+        // Rcout << " The number now is: " << my_it;
       }
     }
   }
