@@ -36,9 +36,17 @@ List as_data_frame(List a) {
 }
 
 // [[Rcpp::export]]
-NumericVector return_size(List x) {
-  List y = clone(x);
-  NumericVector m = NumericVector::create(1.2);
-  return m;
+RObject return_names(List my_vec) {
+  List test = clone(my_vec);
+  CharacterVector i = my_vec.names();
+  
+  for(int m = 0; m < i.size(); m++)
+  {
+    i[m] = "Test1";
+  }
+  
+  test.names() = i;
+
+  return test;
 }
 
