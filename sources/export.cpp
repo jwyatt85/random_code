@@ -55,19 +55,16 @@ void runthis(){
   
   for(list_it m = x.begin(); m != x.end(); ++m){
     check_vec = *m;
-    
     for(num_it yay = check_vec.begin(); yay != check_vec.end(); ++yay){
-      my_it = *yay;
-      Rcout << my_it;
+      if(*yay == 0){
+        my_it = *yay;
+        Rcout << " The number now is: " << my_it;
+      }
     }
-
-    // if(my_it == 1){
-    //   *m = "wut";
-    // }
   }
-  // return x;
-  
 }
+
+  
 
 
 

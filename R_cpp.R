@@ -11,7 +11,9 @@ library(rbenchmark)
 # download.file(url, destfile, mode="w")
 # sourceCpp(destfile)
 # 
-# sourceCpp("~/Documents/git_repos/random_code/sources/export.cpp")
+sourceCpp("~/Documents/git_repos/random_code/sources/export.cpp")
+
+runthis()
 
 ### Benchmarking ####
 a <- replicate(1000, 1:100, simplify=FALSE)
