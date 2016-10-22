@@ -4,7 +4,7 @@ library(Rcpp)
 library(microbenchmark)
 library(rbenchmark)
 library(dplyr)
-options(expressions=100000)0
+# options(expressions=100000)
 
 # url <- "https://raw.githubusercontent.com/jwyatt85/random_code/master/sources/export.cpp"
 # destfile <- paste0(tempdir(), "/mysource.cpp")
@@ -18,7 +18,7 @@ runthis()
 
 my_list <- readr::read_rds("~/Desktop/county_margins.rds")
 my_list <- my_list[1:10]
-# my_list <- my_list[[1]]
+my_list <- my_list[1]
 
 
 final <- lapply(my_list, function(i){
@@ -27,20 +27,19 @@ final <- lapply(my_list, function(i){
   })
 })
 
-options(expressions=100000)
 
-c_county_check <- function(my_list) {
-
-  final <- lapply(my_list, function(i){
-    lapply(i, function(x){
-      c_county_check(x)
-    })
-  })
-  
-  final
-}
-
-c_county_check(my_list)
+# c_county_check <- function(my_list) {
+# 
+#   final <- lapply(my_list, function(i){
+#     lapply(i, function(x){
+#       c_county_check(x)
+#     })
+#   })
+#   
+#   return(final)
+# }
+# 
+# c_county_check(my_list)
 
 
 r_county_check <- function(x){
@@ -61,7 +60,11 @@ returned_list <- r_county_check(my_list)
 
 microbenchmark(
   r_county_check(my_list), 
-  as_data_frame(a)
+  lapply(my_list, function(i){
+    lapply(i, function(x){
+      c_county_check(x)
+    })
+  })
 )
 
 
