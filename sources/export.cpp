@@ -39,34 +39,51 @@ Rcpp::DataFrame as_data_frame(List a) {
 
 // [[Rcpp::export]]
 RObject runthis(){
-
+  
   Rcpp::List x = Rcpp::List::create(
     NumericVector::create(4,2,5), 
+    StringVector::create("male", "female", "1", "2"),
     NumericVector::create(2,3,5,5,5,5),
-    NumericVector::create(1,4,6,5,4,5,5,5,5,5),
-    CharacterVector::create("eke", "woo")
+    NumericVector::create(1,4,6,5,4,5,5,5,5,5)
   );
   
-  int my_it;
+  StringVector my_it;
   
-  Rcpp::NumericVector check_vec;
+  Rcpp::StringVector check_vec;
   typedef Rcpp::List::iterator list_it;
-  typedef Rcpp::NumericVector::iterator num_it;
+  typedef Rcpp::StringVector::iterator num_it;
   
   for(list_it m = x.begin(); m != x.end(); ++m){
     check_vec = *m;
     for(num_it yay = check_vec.begin(); yay != check_vec.end(); ++yay){
-      if(*yay == 5){
-        *yay = 9;
         my_it = *yay;
-        // Rcout << " The number now is: " << my_it;
+      if(*yay == "male"){
+        *yay = "change me";
       }
     }
   }
   return x;
 }
+
+// [[Rcpp::export]]
+RObject check_county(List x){
   
-
-
-
-
+  Rcpp::DataFrame df_vec;
+  Rcpp::NumericVector this_vec;
+  
+  typedef Rcpp::List::iterator list_it;
+  typedef Rcpp::DataFrame::iterator num_it;
+  
+  for(list_it m = x.begin(); m != x.end(); ++m){
+    df_vec = *m;
+    for(num_it vector = df_vec.begin(); vector != df_vec.end(); ++vector){
+      this_vec = *vector;
+      for(int looper = 0; looper != this_vec.size(); ++looper)
+        if(this_vec(looper) >= .50){
+          this_vec(looper) = .00001;
+        }
+        *vector = this_vec;
+    }
+  }
+  return x;
+}
