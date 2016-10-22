@@ -66,7 +66,7 @@ RObject runthis(){
 }
 
 // [[Rcpp::export]]
-RObject c_county_check(List x){
+RObject cpp_county_check(List x){
   
   Rcpp::DataFrame df_vec;
   Rcpp::NumericVector this_vec;

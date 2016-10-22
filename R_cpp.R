@@ -23,7 +23,7 @@ my_list <- my_list[1]
 
 final <- lapply(my_list, function(i){
   lapply(i, function(x){
-    c_county_check(x)
+    cpp_county_check(x)
   })
 })
 
