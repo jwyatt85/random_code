@@ -4,6 +4,7 @@ library(Rcpp)
 library(microbenchmark)
 library(rbenchmark)
 library(dplyr)
+options(expressions=100000)0
 
 # url <- "https://raw.githubusercontent.com/jwyatt85/random_code/master/sources/export.cpp"
 # destfile <- paste0(tempdir(), "/mysource.cpp")
@@ -16,21 +17,52 @@ sourceCpp("~/Documents/git_repos/random_code/sources/export.cpp")
 runthis()
 
 my_list <- readr::read_rds("~/Desktop/county_margins.rds")
+my_list <- my_list[1:10]
+# my_list <- my_list[[1]]
 
-
-my_list <- my_list[[1]]
-lapply(my_list, function(i){
-  check_county(i)
-})
 
 final <- lapply(my_list, function(i){
   lapply(i, function(x){
-    check_county(x)
+    c_county_check(x)
   })
 })
 
+options(expressions=100000)
+
+c_county_check <- function(my_list) {
+
+  final <- lapply(my_list, function(i){
+    lapply(i, function(x){
+      c_county_check(x)
+    })
+  })
+  
+  final
+}
+
+c_county_check(my_list)
 
 
+r_county_check <- function(x){
+  for(i in 1:length(x)){
+    print(i)
+    for(z in 1:length(x[[i]])){
+      for(y in 1:NROW(x[[i]][[z]])){
+        x[[i]][[z]][y,]$Freq
+        if(x[[i]][[z]][y,]$Freq == 0){
+          x[[i]][[z]][y,]$Freq <- .0001
+        }
+      }
+    }
+  }
+}
+
+returned_list <- r_county_check(my_list)
+
+microbenchmark(
+  r_county_check(my_list), 
+  as_data_frame(a)
+)
 
 
 
