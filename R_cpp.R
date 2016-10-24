@@ -14,7 +14,7 @@ library(dplyr)
 
 sourceCpp("~/Documents/git_repos/random_code/sources/export.cpp")
 
-runthis()
+# runthis()
 
 my_list <- readr::read_rds("~/Desktop/county_margins.rds")
 my_list <- my_list[1:10]
@@ -24,7 +24,7 @@ final <- cpp_county_check(my_list)
 
 r_county_check <- function(x){
   for(i in 1:length(x)){
-    print(i)
+    # print(i)
     for(z in 1:length(x[[i]])){
       for(y in 1:NROW(x[[i]][[z]])){
         x[[i]][[z]][y,]$Freq
@@ -36,12 +36,13 @@ r_county_check <- function(x){
   }
 }
 
-returned_list <- r_county_check(my_list)
+# returned_list <- r_county_check(my_list)
 
-microbenchmark(
+county_mrp_bench <- microbenchmark(
   r_county_check(my_list), 
-  c_county_check(x)
+  cpp_county_check(my_list)
 )
+ggplot2::autoplot(county_mrp_bench)
 
 
 
