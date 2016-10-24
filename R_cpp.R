@@ -4,6 +4,7 @@ library(Rcpp)
 library(microbenchmark)
 library(rbenchmark)
 library(dplyr)
+
 # options(expressions=100000)
 
 # url <- "https://raw.githubusercontent.com/jwyatt85/random_code/master/sources/export.cpp"
@@ -14,8 +15,7 @@ library(dplyr)
 
 sourceCpp("~/Documents/git_repos/random_code/sources/export.cpp")
 
-# runthis()
-
+#### Benchmarking county check 0 ####
 my_list <- readr::read_rds("~/Desktop/county_margins.rds")
 my_list <- my_list[1:10]
 my_list <- my_list[1]
@@ -36,17 +36,12 @@ r_county_check <- function(x){
   }
 }
 
-# returned_list <- r_county_check(my_list)
-
 county_mrp_bench <- microbenchmark(
   r_county_check(my_list), 
   cpp_county_check(my_list)
 )
 ggplot2::autoplot(county_mrp_bench)
-
-
-
-### Benchmarking ####
+#### Benchmarking Data frame ####
 a <- replicate(1000, 1:100, simplify=FALSE)
 
 microbenchmark(
@@ -56,6 +51,10 @@ microbenchmark(
 #returns dataframes1
 m <- as.data.frame(a)
 m2 <- as_data_frame(a)
+#### Pointer testing ####
+t_pointers()
+
+
 
 
 

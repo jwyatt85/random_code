@@ -38,34 +38,6 @@ Rcpp::DataFrame as_data_frame(List a) {
 }
 
 // [[Rcpp::export]]
-RObject runthis(){
-  
-  Rcpp::List x = Rcpp::List::create(
-    NumericVector::create(4,2,5), 
-    StringVector::create("male", "female", "1", "2"),
-    NumericVector::create(2,3,5,5,5,5),
-    NumericVector::create(1,4,6,5,4,5,5,5,5,5)
-  );
-  
-  StringVector my_it;
-  
-  Rcpp::StringVector check_vec;
-  typedef Rcpp::List::iterator list_it;
-  typedef Rcpp::StringVector::iterator num_it;
-  
-  for(list_it m = x.begin(); m != x.end(); ++m){
-    check_vec = *m;
-    for(num_it yay = check_vec.begin(); yay != check_vec.end(); ++yay){
-        my_it = *yay;
-      if(*yay == "male"){
-        *yay = "change me";
-      }
-    }
-  }
-  return x;
-}
-
-// [[Rcpp::export]]
 RObject cpp_county_check(List x){
   
   Rcpp::DataFrame df_vec;
@@ -97,3 +69,20 @@ RObject cpp_county_check(List x){
   }
   return x;
 }
+
+// [[Rcpp::export]]
+void t_pointers(){
+  int y = 6;
+  int *ip;
+  
+  ip = &y;
+  
+  time_t now = time(0);
+  char* dt = ctime(&now);
+  
+  Rcout << " the address of y = " << ip << std::endl;
+  Rcout << "The value of y stored in ip = " << *ip << std::endl; 
+  Rcout << " Time is now: " << dt;
+}
+
+
