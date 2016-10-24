@@ -20,27 +20,7 @@ my_list <- readr::read_rds("~/Desktop/county_margins.rds")
 my_list <- my_list[1:10]
 my_list <- my_list[1]
 
-
-final <- lapply(my_list, function(i){
-  lapply(i, function(x){
-    cpp_county_check(x)
-  })
-})
-
-
-# c_county_check <- function(my_list) {
-# 
-#   final <- lapply(my_list, function(i){
-#     lapply(i, function(x){
-#       c_county_check(x)
-#     })
-#   })
-#   
-#   return(final)
-# }
-# 
-# c_county_check(my_list)
-
+final <- cpp_county_check(my_list) 
 
 r_county_check <- function(x){
   for(i in 1:length(x)){
@@ -60,11 +40,7 @@ returned_list <- r_county_check(my_list)
 
 microbenchmark(
   r_county_check(my_list), 
-  lapply(my_list, function(i){
-    lapply(i, function(x){
-      c_county_check(x)
-    })
-  })
+  c_county_check(x)
 )
 
 

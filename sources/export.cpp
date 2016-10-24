@@ -69,20 +69,30 @@ RObject runthis(){
 RObject cpp_county_check(List x){
   
   Rcpp::DataFrame df_vec;
+  Rcpp::List beginner_list;
+  Rcpp::List beginner_list2;
   Rcpp::NumericVector this_vec;
   
   typedef Rcpp::List::iterator list_it;
+  typedef Rcpp::List::iterator list_it2;
+  typedef Rcpp::List::iterator list_it3;
   typedef Rcpp::DataFrame::iterator num_it;
   
-  for(list_it m = x.begin(); m != x.end(); ++m){
-    df_vec = *m;
-    for(num_it vector = df_vec.begin(); vector != df_vec.end(); ++vector){
-      this_vec = *vector;
-      for(int looper = 0; looper != this_vec.size(); ++looper)
-        if(this_vec(looper) == 0){
-          this_vec(looper) = .0001;
+  for(list_it m1 = x.begin(); m1 != x.end(); ++m1){
+    beginner_list = *m1;
+    for(list_it2 m2 = beginner_list.begin(); m2 != beginner_list.end(); ++m2){
+      beginner_list2 = *m2;
+      for(list_it3 m3 = beginner_list2.begin(); m3 != beginner_list2.end(); ++m3){
+        df_vec = *m3;
+        for(num_it vector = df_vec.begin(); vector != df_vec.end(); ++vector){
+          this_vec = *vector;
+          for(int looper = 0; looper != this_vec.size(); ++looper)
+            if(this_vec(looper) == 0){
+              this_vec(looper) = .0001;
+            }
+            *vector = this_vec;
         }
-        *vector = this_vec;
+      }
     }
   }
   return x;
