@@ -87,8 +87,8 @@ RObject cpp_county_check(List x){
         for(num_it vector = df_vec.begin(); vector != df_vec.end(); ++vector){
           this_vec = *vector;
           for(int looper = 0; looper != this_vec.size(); ++looper)
-            if(this_vec(looper) == 0){
-              this_vec(looper) = .0001;
+            if(this_vec[looper] == 0){
+              this_vec[looper] = .0001;
             }
             *vector = this_vec;
         }
