@@ -115,4 +115,12 @@ RObject t_pointers(){
   return(test1);
 }
 
+// [[Rcpp::export]]
+
+NumericVector list_test(List x){
+
+  NumericVector m = x["a"];
+    return m;
+}
+
 
