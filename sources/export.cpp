@@ -71,7 +71,7 @@ RObject cpp_county_check(List x){
 }
 
 // [[Rcpp::export]]
-void t_pointers(){
+RObject t_pointers(){
   int y = 6;
   int *ip;
   
@@ -83,6 +83,36 @@ void t_pointers(){
   Rcout << " the address of y = " << ip << std::endl;
   Rcout << "The value of y stored in ip = " << *ip << std::endl; 
   Rcout << " Time is now: " << dt;
+
+  
+  typedef struct
+  {
+    char m[10];
+    char m2[10];
+  } Books;
+  
+  Books Book1;
+  strcpy(Book1.m, "hey-o");
+  strcpy(Book1.m2, "test2");
+  
+  Rcout << Book1.m << std::endl; 
+  
+  IntegerVector x = IntegerVector::create( 0, 1, NA_INTEGER, 3 );
+  IntegerVector test1 = seq_len(5);
+  
+  bool res = all(is_na(x));
+  
+  if(res){
+    Rcout << "yay it's not defined";
+  }
+  
+  for(int i = 0; i != test1.size(); i++){
+    Rcout << test1[i];
+  }
+  
+  test1.names() = CharacterVector::create("one" ,"two", "three", "four", "five");
+    
+  return(test1);
 }
 
 
