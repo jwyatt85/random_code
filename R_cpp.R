@@ -52,11 +52,12 @@ microbenchmark(
 m <- as.data.frame(a)
 m2 <- as_data_frame(a)
 #### Pointer testing ####
+
 test1_return <- t_pointers()
 #### List attributes testing ####
 
 m1 <- list(a = c(1,2,3), b = c(4,5,6))
-
+attr(m1, "test1") <- "this is a test"
 
 list_test(m1)
 
