@@ -8,16 +8,17 @@ convertCSV <- function(path){
     data <- xlsx::read.xlsx(path, sheetName = "Sheet1")
   
     x <- unlist(strsplit(path, "/"))
-    name <- paste0(strsplit(x[3], "[.]")[[1]][1], ".csv")
+    name_locattion <- length(x)
+    name <- paste0(strsplit(x[name_locattion], "[.]")[[1]][1], ".csv")
     
-    x <- x[-length(x)]
-    x <- paste0(x, "/")
+    x <- paste0(x[-name_locattion], "/")
     
     new_path <- paste0(paste(x, sep="", collapse=""),name)
     readr::write_csv(data, new_path)
     
   } else {
     print("file has to be of xlsx or xls format")
+    stop()
   }
 }
 
