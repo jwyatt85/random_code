@@ -1,4 +1,6 @@
 
+# Code to run: Rscript command_line_convertCSV.R "~/Desktop/test1.xlsx"
+
 args <- commandArgs(trailingOnly = TRUE)
 
 convertCSV <- function(path){
