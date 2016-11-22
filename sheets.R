@@ -41,6 +41,5 @@ check_clients <- function(call){
 
 check_clients(args)
 
-args = "all"
 
 
