@@ -1,4 +1,10 @@
 
+# alias check_clients='function _blah(){
+# cd ~/Desktop;
+# Rscript ~/Desktop/sheets.R $1;
+# };_blah'
+
+
 args <- commandArgs(trailingOnly = TRUE)
 
 suppressPackageStartupMessages({
