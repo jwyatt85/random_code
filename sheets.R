@@ -4,7 +4,6 @@
 # Rscript ~/Desktop/sheets.R $1;
 # };_blah'
 
-
 args <- commandArgs(trailingOnly = TRUE)
 
 suppressPackageStartupMessages({
@@ -20,14 +19,21 @@ check_clients <- function(call){
   clients2 <- suppressMessages(googlesheets::gs_read(gap, ws=2))
   
   if(call == "all"){
-   clients <-  clients1 %>% 
+    clients1 <-clients1 %>% 
       mutate(
-        last_contact = as.Date(last_contact, "%m/%d/%Y")
+        last_contact = as.Date(last_contact, "%m/%d/%Y"),
+        urgent = ifelse(Sys.Date() - last_contact >= 20, 1, urgent)
       ) %>% 
-      arrange(reminder, last_contact)
-   
-   print(kable(clients)) #output to terminal
-   print(kable(clients2))  #output to terminal
+      select(
+        client, notes, last_contact, urgent
+      ) %>% 
+      arrange(urgent, desc(last_contact))
+    
+    clients2 <- clients2 %>% 
+      arrange(desc(poll))
+    
+    print(kable(clients1)) #output to terminal
+    print(kable(clients2))  #output to terminal
    
   } else
     print("give me a call")
