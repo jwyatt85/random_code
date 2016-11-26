@@ -14,10 +14,29 @@ suppressPackageStartupMessages({
 
 check_clients <- function(call){
   
+  call_temp <- call[1]
+  poll_number <- call[2]
+  client <- call[3]
+  tab_type <- call[4]
+  tab_narrow <- call[5]
+  
+  call <- call_temp
+  
+  if(call == "man"){
+    cat("\n\n\n all      = get all information (notes, polls, todos) \n",
+      "todo     = list of todos and relevant due dates for tasks \n",
+      "edit     = link to Sheets to edit the information \n", 
+      "projects = polls clients have been on and total Qs used \n",
+      "tabs     = pulls most recent tabs of prefered client on prefered poll \n\n ar1: pollnumber; \n arg2:client; \n arg3: tab type (crosstab or topline)); \n arg4: optional keyword to narrow search \n\n", 
+      "man      = get the manual that you're reading now \n\n\n")
+    stop("Terminated check_clients")
+  }
+  
   internet_access <- try(is.character(RCurl::getURL("www.google.com"))) == TRUE
   cat("\014") # this code clears the terminal so you don't see the error if no internet
   
   if(internet_access){ #If internet download latest sheets and save, then load
+    
     gap <- suppressMessages(googlesheets::gs_title("Client_list"))
     clients1 <- suppressMessages(googlesheets::gs_read(gap, ws=1))
     clients2 <- suppressMessages(googlesheets::gs_read(gap, ws=2))
@@ -29,14 +48,16 @@ check_clients <- function(call){
     
   } else {
     latest_client_data <- readr::read_rds("~/Desktop/client_data.rds")
+    
+    # mc_data <- latest_client_data[[5]]
+    
     clients1 <- latest_client_data[[1]]
     clients2 <- latest_client_data[[2]]
     clients3 <- latest_client_data[[3]]
     download_time <- latest_client_data[[4]]
     
     cat("\n")
-    print(paste0("Internet access not detected.  Loading most recent client information download: ", download_time))
-    cat("\n")
+    cat("Internet access not detected.  Loading most recent client information, download: ", download_time, "\n")
   }
   
   if(call == "all") {
@@ -60,10 +81,10 @@ check_clients <- function(call){
       filter(!is.na(active)) %>% 
       arrange(`due date`)
     
-    print(kable(clients1)) #output to terminal
-    print(kable(clients2)) #output to terminal
-    print(kable(clients3))
-    cat("\n\n\n\n")
+    print(knitr::kable(clients1)) #output to terminal
+    print(knitr::kable(clients2)) #output to terminal
+    print(knitr::kable(clients3))
+    cat("\n\n\n")
     
   } else if(call == "edit") {
     
@@ -83,7 +104,7 @@ check_clients <- function(call){
       filter(!is.na(active)) %>% 
       arrange(`due date`)
     
-    print(kable(clients3))
+    print(knitr::kable(clients3))
     cat("\n\n\n")
     
   } else if(call == "projects") {
@@ -95,9 +116,43 @@ check_clients <- function(call){
       summarize(totalQs_used_on_all_polls = sum(Qs_used)) %>% 
       arrange(totalQs_used_on_all_polls)
     
-    print(kable(totals))
-    print(kable(clients2))
+    print(knitr::kable(totals))
+    print(knitr::kable(clients2))
     cat("\n\n\n")
+    
+  } else if(call == "tabs") {
+    
+    clients2 <- clients2 %>% 
+      arrange(desc(poll))
+    
+    print(knitr::kable(clients2))
+    cat("\n")
+    
+    poll_number <- as.character(poll_number)
+    client <- as.character(client)
+    
+    files <- sort(list.files(paste0("~/Dropbox/tmc/polls/", poll_number, "/Writeup")), decreasing = T)
+    narrow <- files[grep(client, files)]
+    narrow <- narrow[grep(poll_number, narrow)]
+    narrow_print <- narrow
+    
+    narrow <- narrow[grep(tab_type, narrow)]
+    narrow <- sort(narrow, decreasing = T)
+    
+  
+    cat("All files with poll and client: \n")
+    print(knitr::kable(data.frame(files = narrow_print)))
+    cat("\n")
+    
+    if(!is.na(tab_narrow)){
+      narrow <- narrow[grep(tab_narrow, narrow)]
+      open_this_file <- narrow[1]
+    } else {
+      open_this_file <- narrow[1]
+    }
+    
+    cat("Opening the following file: ", open_this_file, "\n")
+    try(system(paste0("open ", paste0("~/Dropbox/tmc/polls/", poll_number, "/Writeup/"), open_this_file)))
     
   } else {
     stop("call me please")
