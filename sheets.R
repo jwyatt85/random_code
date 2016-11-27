@@ -28,7 +28,7 @@ check_clients <- function(call){
       "edit     = link to Sheets to edit the information \n", 
       "projects = polls clients have been on and total Qs used \n",
       "tabs     = pulls most recent tabs of prefered client on prefered poll \n\n ar1: pollnumber; \n arg2:client; \n arg3: tab type (crosstab or topline)); \n arg4: optional keyword to narrow search \n\n", 
-      "search   = arg1: looks up folders/poll where that client is at"
+      "search   = arg1: looks up folders/poll where that client is at \n",
       "man      = get the manual that you're reading now \n\n\n")
     stop("Terminated check_clients")
   }
