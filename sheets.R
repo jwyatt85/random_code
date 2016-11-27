@@ -28,6 +28,7 @@ check_clients <- function(call){
       "edit     = link to Sheets to edit the information \n", 
       "projects = polls clients have been on and total Qs used \n",
       "tabs     = pulls most recent tabs of prefered client on prefered poll \n\n ar1: pollnumber; \n arg2:client; \n arg3: tab type (crosstab or topline)); \n arg4: optional keyword to narrow search \n\n", 
+      "search   = arg1: looks up folders/poll where that client is at"
       "man      = get the manual that you're reading now \n\n\n")
     stop("Terminated check_clients")
   }
@@ -153,6 +154,40 @@ check_clients <- function(call){
     
     cat("Opening the following file: ", open_this_file, "\n")
     try(system(paste0("open ", paste0("~/Dropbox/tmc/polls/", poll_number, "/Writeup/"), open_this_file)))
+    
+  } else if(call == "search") {
+    client <- tolower(poll_number)
+    files <- sort(list.files("~/Dropbox/tmc/polls"), decreasing = T)
+    files_filtered <- as.character(suppressWarnings(na.omit(as.numeric(files))))
+
+    location_hits <- list()
+    
+    for(i in seq_along(files_filtered)){
+      
+      poll <- files_filtered[i]
+      location <- paste0("~/Dropbox/tmc/polls/", poll, "/Writeup")
+      poll_files <- list.files(location)
+      
+      are_there <- grepl(client, tolower(poll_files))
+      
+      if(any(are_there)){
+        location_hits <- c(location_hits, poll)
+      } else {
+        location_hits <- location_hits
+      }
+    }
+    
+    if(length(location_hits) > 0){
+      
+    location_hits <- unlist(location_hits)
+    final_location_hits <- data.frame(location = cbind(location_hits))
+    
+    cat("\n\n That client is located in the following project folders: \n")
+    print(knitr::kable(final_location_hits))
+    cat("\n\n")
+    } else {
+      cat("\n Can't find that client \n")
+    }
     
   } else {
     stop("call me please")
