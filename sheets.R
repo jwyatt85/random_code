@@ -10,7 +10,7 @@ suppressPackageStartupMessages({
   library("dplyr")
   library("googlesheets")
   suppressWarnings(library("knitr"))
-})
+}) 
 
 check_clients <- function(call){
   
