@@ -10,7 +10,7 @@ suppressPackageStartupMessages({
   library("dplyr")
   library("googlesheets")
   suppressWarnings(library("knitr"))
-}) 
+})
 
 check_clients <- function(call){
   
@@ -23,14 +23,14 @@ check_clients <- function(call){
   call <- call_temp
   
   if(call == "man"){
-    cat("\n\n\n all      = get all information (notes, polls, todos) \n",
+    cat("\n all      = get all information (notes, polls, todos) \n",
       "todo     = list of todos and relevant due dates for tasks \n",
       "edit     = link to Sheets to edit the information \n", 
       "projects = polls clients have been on and total Qs used \n",
       "tabs     = pulls most recent tabs of prefered client on prefered poll \n\n ar1: pollnumber; \n arg2:client; \n arg3: tab type (crosstab or topline)); \n arg4: optional keyword to narrow search \n\n", 
       "search   = arg1: looks up folders/poll where that client is at \n",
-      "man      = get the manual that you're reading now \n\n\n")
-    stop("Terminated check_clients")
+      "man      = get the manual that you're reading now \n\n")
+    stop("Terminated check_clients - provide a parameter")
   }
   
   internet_access <- try(is.character(RCurl::getURL("www.google.com"))) == TRUE
@@ -72,20 +72,10 @@ check_clients <- function(call){
       ) %>% 
       arrange(urgent, desc(last_contact))
     
-    clients2 <- clients2 %>% 
-      arrange(desc(poll))
-    
-    clients3 <- clients3 %>% 
-      mutate(
-        `due date` =  as.Date(`due date`, "%m/%d/%Y")
-      ) %>% 
-      filter(!is.na(active)) %>% 
-      arrange(`due date`)
-    
     print(knitr::kable(clients1)) #output to terminal
-    print(knitr::kable(clients2)) #output to terminal
-    print(knitr::kable(clients3))
-    cat("\n\n\n")
+    # print(knitr::kable(clients2)) #output to terminal
+    # print(knitr::kable(clients3))
+    cat("\n\n")
     
   } else if(call == "edit") {
     
@@ -130,14 +120,14 @@ check_clients <- function(call){
     cat("\n")
     
     poll_number <- as.character(poll_number)
-    client <- as.character(client)
+    client <- tolower(as.character(client))
     
-    files <- sort(list.files(paste0("~/Dropbox/tmc/polls/", poll_number, "/Writeup")), decreasing = T)
+    files <- tolower(sort(list.files(paste0("~/Dropbox/tmc/polls/", poll_number, "/Writeup")), decreasing = T))
     narrow <- files[grep(client, files)]
     narrow <- narrow[grep(poll_number, narrow)]
     narrow_print <- narrow
     
-    narrow <- narrow[grep(tab_type, narrow)]
+    narrow <- narrow[grep(tolower(tab_type), narrow)]
     narrow <- sort(narrow, decreasing = T)
     
   
