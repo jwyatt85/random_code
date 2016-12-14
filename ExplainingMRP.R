@@ -1,8 +1,9 @@
 
-
-require(purrr, quietly = T)
-require(dplyr, quietly = T)
-require(blme, quietly = T)
+suppressPackageStartupMessages({
+  require(purrr, quietly = T)
+  require(dplyr, quietly = T)
+  require(blme, quietly = T)
+})
 
 set.seed(12345)
 
@@ -31,7 +32,6 @@ state_list <- state_list %>%
       )
   })
 
-
 state_grouping_vars <- state_list %>% 
   map_df(function(x){
     x %>% 
@@ -39,14 +39,15 @@ state_grouping_vars <- state_list %>%
       unique()
   })
 
+total_reps <- 20000
 
 suppressWarnings(
   survey_df <- data.frame(
-    age = replicate(10000, sample(c("18-29", "30-44", "45-64", "65+"), prob = c(.25, .30, .25, .20), size = 1)),
-    gender = replicate(10000, sample(c("Male", "Female"), prob = c(.48, .52), size = 1)),
-    race = replicate(10000, sample(c("white", "non-white"), prob = c(.80, .20), size = 1)),
-    dependent_variable = replicate(10000, sample(c(1, 0), prob = c(.60, .40), size = 1)),
-    state = as.character(replicate(10000, sample(state_loop, size = 1)))
+    age = replicate(total_reps, sample(c("18-29", "30-44", "45-64", "65+"), prob = c(.25, .30, .25, .20), size = 1)),
+    gender = replicate(total_reps, sample(c("Male", "Female"), prob = c(.48, .52), size = 1)),
+    race = replicate(total_reps, sample(c("white", "non-white"), prob = c(.80, .20), size = 1)),
+    dependent_variable = replicate(total_reps, sample(c(1, 0), prob = c(.60, .40), size = 1)),
+    state = as.character(replicate(total_reps, sample(state_loop, size = 1)))
   ) %>% 
     left_join(state_grouping_vars, by = "state") %>% 
     map_if(is.factor, as.character) %>% 
@@ -72,5 +73,7 @@ state_pred <- state_list %>%
       summarise(state_total = sum(state_pred))
   }) %>% 
   bind_rows(.id = "state") 
+
+readr::write_csv(state_pred, "~/Desktop/state_predictMRP.csv")
 
 
