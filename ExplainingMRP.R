@@ -76,37 +76,45 @@ state_pred <- state_list %>%
 
 # readr::write_csv(state_pred, "~/Desktop/state_predictMRP.csv")
 
-#### Advanced #####
+# #### Advanced #####
+options(scipen=999)
+library(vcrpart)
+data(movie)
+model.24.1 <- olmm(as.factor(critic) ~ movie + re(1|review),
+                   data = movie, family = adjacent())
+
+summary(model.24.1)
+
+predict(model.24.1, newdata = movie, type = "response")
+
+
+model.24.1 <- olmm(rating ~ ce(contact) + ce(temp) + re(1|judge),data = wine)
+data2 <- wine %>% 
+  select(-rating) %>% 
+  dplyr::sample_n(30)
+
+predict(model.24.1, newdata = data2, type = "response")
+
+library(ordinal)
+data(wine)
+
+fm1 <- clmm2(rating ~ contact + temp, random = judge, data=wine, link  = 'logistic')
+summary(fm1)
+cbind(wine, pred = predict(fm1, newdata = wine, type = "response"))
+# 
+# 
+# #### use Mixcat, not sure I like thought ####
 library(mixcat)
-install.packages("ordinal")
 data(schizo)
 attach(schizo)
 
-npmlt(y ~ trt + wk,
+test1 <- npmlt(y ~ trt + wk,
       # formula.npo=~trt,
       random=~1+trt,
       # id=id,
       k=2,
       EB=FALSE)
 
-
-library(ordinal)
-data(wine)
-## A simple cumulative link model:
-fm1 <- clm(rating ~ contact + temp, data=wine)
-summary(fm1)
-fitted(fm1) # same as predict, and provides the probability of that class given covariates
-
-## A simple cumulative link mixed model:
-
-fmm1 <- clmm(rating ~ contact + temp + (1|judge), data=wine)
-summary(fmm1)
+test1
 
 
-xx <- cbind(wine, fitted(fm1))
-cbind(wine, pred = predict(fm1, newdata = wine, type = "class"))
-
-library(ggplot2)
-ggplot(xx, aes(x = fitted(fm1), y = response, colour = rating)) +
-  geom_line() +
-  facet_grid(rating ~ ., scales="free")
