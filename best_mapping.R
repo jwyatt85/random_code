@@ -19,7 +19,6 @@ leaflet(data = mapStates) %>% addTiles() %>%
 
 ### Get lat/long from Address ####
 geocodeAdddress <- function(address) {
-  require(RJSONIO)
   url <- "http://maps.google.com/maps/api/geocode/json?address="
   lat_long_list <- lapply(
     address,
@@ -31,7 +30,7 @@ geocodeAdddress <- function(address) {
           "&sensor=false", 
           sep = "")
       )
-      x <- fromJSON(url, simplify = FALSE)
+      x <- RJSONIO::fromJSON(url, simplify = FALSE)
       
       if (x$status == "OK") {
         out <- c(x$results[[1]]$geometry$location$lng,
