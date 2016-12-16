@@ -6,7 +6,7 @@ library(magrittr)
 leaflet() %>% 
   addTiles() %>%
   # addProviderTiles("OpenStreetMap.Mapnik") %>% 
-  setView(-84.3847, 33.7613, zoom = 6) %>% 
+  setView(-84.3847, 33.7613, zoom = 15) %>% 
   addMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Location)
 # addCircleMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Features...Service)
 
@@ -23,18 +23,18 @@ leaflet(data = mapStates) %>% addTiles() %>%
 
 ### Get lat/long from Address ####
 geocodeAdddress <- function(address) {
-  url <- "http://maps.google.com/maps/api/geocode/json?address="
+  url1 <- "http://maps.google.com/maps/api/geocode/json?address="
   lat_long_list <- lapply(
     address,
     function(i){
-      url <- URLencode(
+      url2 <- URLencode(
         paste(
-          url, 
+          url1, 
           i, 
           "&sensor=false", 
           sep = "")
       )
-      x <- RJSONIO::fromJSON(url, simplify = FALSE)
+      x <- RJSONIO::fromJSON(url2, simplify = FALSE)
       
       if (x$status == "OK") {
         out <- c(x$results[[1]]$geometry$location$lng,
