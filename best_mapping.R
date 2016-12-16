@@ -21,15 +21,29 @@ leaflet(data = mapStates) %>% addTiles() %>%
 geocodeAdddress <- function(address) {
   require(RJSONIO)
   url <- "http://maps.google.com/maps/api/geocode/json?address="
-  url <- URLencode(paste(url, address, "&sensor=false", sep = ""))
-  x <- fromJSON(url, simplify = FALSE)
-  if (x$status == "OK") {
-    out <- c(x$results[[1]]$geometry$location$lng,
-             x$results[[1]]$geometry$location$lat)
-  } else {
-    out <- NA
-  }
-  Sys.sleep(0.2)  # API only allows 5 requests per second
-  out
+  lat_long_list <- lapply(
+    address,
+    function(i){
+      url <- URLencode(
+        paste(
+          url, 
+          i, 
+          "&sensor=false", 
+          sep = "")
+      )
+      x <- fromJSON(url, simplify = FALSE)
+      
+      if (x$status == "OK") {
+        out <- c(x$results[[1]]$geometry$location$lng,
+                 x$results[[1]]$geometry$location$lat)
+      } else {
+        out <- NA
+      } 
+      Sys.sleep(0.4)
+      out
+    }
+  )
+  return(lat_long_list)
 }
 
+geocodeAdddress(c("729 15th St NW, Washington, DC", "Tampa, FL", "Wisconsin", "Florida"))
