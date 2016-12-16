@@ -1,13 +1,17 @@
 
 file <- "https://opendata.socrata.com/api/views/ddym-zvjk/rows.csv"
 starbucks <- read.csv(file)
-library(leaflet); library(magrittr)
+library(leaflet)
+library(magrittr)
 leaflet() %>% 
   addTiles() %>%
-  setView(-84.3847, 33.7613, zoom = 15) %>% 
+  # addProviderTiles("OpenStreetMap.Mapnik") %>% 
+  setView(-84.3847, 33.7613, zoom = 6) %>% 
   addMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Location)
 # addCircleMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Features...Service)
 
+?leaflet(0)
+?addProviderTiles
 
 library(maps)
 mapStates = map("state", fill = TRUE, plot = FALSE)
@@ -46,10 +50,21 @@ geocodeAdddress <- function(address) {
   return(lat_long_list)
 }
 
-x <- geocodeAdddress(c("729 15th St NW, Washington, DC", "Tampa, FL", "Wisconsin", "Florida"))
-bind_rows(x) %>% 
+x <- geocodeAdddress(c("729 15th St NW, Washington, DC", "Tampa, FL", "Wisconsin", "Florida")) # lat/long
+
+x %>% 
+  bind_rows() %>% 
   t() %>% 
-  as.data.frame() %>% 
-  transmute(address = row.names(.), Lat = V1, Lon = V2)
+  data.frame() %>% 
+  transmute(
+    address = row.names(.), 
+    Lat = V1, 
+    Lon = V2
+    )
+
+
+
+##### maping with R logos #####
+library(leaflet)
 
 
