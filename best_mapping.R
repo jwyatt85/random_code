@@ -41,8 +41,15 @@ geocodeAdddress <- function(address) {
       Sys.sleep(0.4)
       out
     }
-  )
+  ) %>% 
+    set_names(address)
   return(lat_long_list)
 }
 
-geocodeAdddress(c("729 15th St NW, Washington, DC", "Tampa, FL", "Wisconsin", "Florida"))
+x <- geocodeAdddress(c("729 15th St NW, Washington, DC", "Tampa, FL", "Wisconsin", "Florida"))
+bind_rows(x) %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  transmute(address = row.names(.), Lat = V1, Lon = V2)
+
+
