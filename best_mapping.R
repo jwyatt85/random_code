@@ -3,6 +3,7 @@ file <- "https://opendata.socrata.com/api/views/ddym-zvjk/rows.csv"
 starbucks <- read.csv(file)
 library(leaflet)
 library(magrittr)
+library(dplyr)
 leaflet() %>% 
   addTiles() %>%
   # addProviderTiles("OpenStreetMap.Mapnik") %>% 
@@ -35,7 +36,7 @@ geocodeAdddress <- function(address) {
           sep = "")
       )
       x <- RJSONIO::fromJSON(url2, simplify = FALSE)
-      
+
       if (x$status == "OK") {
         out <- c(x$results[[1]]$geometry$location$lng,
                  x$results[[1]]$geometry$location$lat)
@@ -50,7 +51,7 @@ geocodeAdddress <- function(address) {
   return(lat_long_list)
 }
 
-x <- geocodeAdddress(c("729 15th St NW, Washington, DC", "Tampa, FL", "Wisconsin", "Florida")) # lat/long
+x <- geocodeAdddress(c("729 15th St NW, Washington, DC", "Tampa, FL", "Wisconsin", "Florida")) # long/lat
 
 x %>% 
   bind_rows() %>% 

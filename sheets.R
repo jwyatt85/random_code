@@ -26,7 +26,6 @@ check_clients <- function(call){
     cat("\n all      = get all information (notes, polls, todos) \n",
       "todo     = list of todos and relevant due dates for tasks \n",
       "edit     = link to Sheets to edit the information \n", 
-      "projects = polls clients have been on and total Qs used \n",
       "tabs     = pulls most recent tabs of prefered client on prefered poll \n\n ar1: pollnumber; \n arg2:client; \n arg3: tab type (crosstab or topline)); \n arg4: optional keyword to narrow search \n\n", 
       "search   = arg1: looks up folders/poll where that client is at \n",
       "man      = get the manual that you're reading now \n\n")
@@ -96,19 +95,6 @@ check_clients <- function(call){
       arrange(`due date`)
     
     print(knitr::kable(clients3))
-    cat("\n\n\n")
-    
-  } else if(call == "projects") {
-    clients2 <- clients2 %>% 
-      arrange(desc(poll))
-    
-    totals <- clients2 %>% 
-      group_by(client) %>% 
-      summarize(totalQs_used_on_all_polls = sum(Qs_used)) %>% 
-      arrange(totalQs_used_on_all_polls)
-    
-    print(knitr::kable(totals))
-    print(knitr::kable(clients2))
     cat("\n\n\n")
     
   } else if(call == "tabs") {
