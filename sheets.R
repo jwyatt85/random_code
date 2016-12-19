@@ -99,12 +99,6 @@ check_clients <- function(call){
     
   } else if(call == "tabs") {
     
-    clients2 <- clients2 %>% 
-      arrange(desc(poll))
-    
-    print(knitr::kable(clients2))
-    cat("\n")
-    
     poll_number <- as.character(poll_number)
     client <- tolower(as.character(client))
     
