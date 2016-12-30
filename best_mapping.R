@@ -1,4 +1,6 @@
 
+shiny::runGitHub("rstudio/shiny-examples", subdir="063-superzip-example")
+
 file <- "https://opendata.socrata.com/api/views/ddym-zvjk/rows.csv"
 starbucks <- read.csv(file)
 library(leaflet)
@@ -7,12 +9,12 @@ library(dplyr)
 leaflet() %>% 
   addTiles() %>%
   # addProviderTiles("OpenStreetMap.Mapnik") %>% 
-  setView(-84.3847, 33.7613, zoom = 15) %>% 
+  setView(-84.3847, 33.7613, zoom = 5) %>% 
   addMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Location)
 # addCircleMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Features...Service)
 
-?leaflet(0)
-?addProviderTiles
+# ?leaflet(0)
+# ?addProviderTiles
 
 library(maps)
 mapStates = map("state", fill = TRUE, plot = FALSE)
