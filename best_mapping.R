@@ -9,7 +9,7 @@ library(dplyr)
 leaflet() %>% 
   addTiles() %>%
   # addProviderTiles("OpenStreetMap.Mapnik") %>% 
-  setView(-84.3847, 33.7613, zoom = 5) %>% 
+  setView(-84.3847, 33.7613, zoom = 10) %>% 
   addMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Location)
 # addCircleMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Features...Service)
 
