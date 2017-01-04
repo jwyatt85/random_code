@@ -98,23 +98,12 @@ predict(model.24.1, newdata = data2, type = "response")
 library(ordinal)
 data(wine)
 
-fm1 <- clmm2(rating ~ contact + temp, random = judge, data=wine, link  = 'logistic')
-summary(fm1)
-cbind(wine, pred = predict(fm1, newdata = wine, type = "response"))
-# 
-# 
-# #### use Mixcat, not sure I like thought ####
-library(mixcat)
-data(schizo)
-attach(schizo)
+fm2 <- clmm2(rating ~ contact + temp, random = judge, data=wine, Hess = TRUE)
+summary(fm2)
+pr2 <- profile(fm2, rance =c(.1,4), nSteps=30, trace =0)
+plot(pr2)
 
-test1 <- npmlt(y ~ trt + wk,
-      # formula.npo=~trt,
-      random=~1+trt,
-      # id=id,
-      k=2,
-      EB=FALSE)
 
-test1
+cbind(wine, pred = predict(fm2, newdata = wine))
 
 
