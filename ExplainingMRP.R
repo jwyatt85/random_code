@@ -106,4 +106,7 @@ plot(pr2)
 
 cbind(wine, pred = predict(fm2, newdata = wine))
 
+#wht does this mean? 
+# for an average judge at cold temp the cumulative probability of bitterness rating in categroy j or below is ...
+
 
