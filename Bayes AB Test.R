@@ -2,6 +2,7 @@
 library(ggplot2)
 library(grid)
 library(gridExtra)
+library(tidyr)
 
 curve(dbeta(x, 1,1)) # these are our weak priors for the AB test.  We don't know or have any reason to believe A over B
 
@@ -15,6 +16,9 @@ prior.beta <- 4
 a.samples <- rbeta(n.trials,36+prior.alpha,114+prior.beta)
 b.samples <- rbeta(n.trials,50+prior.alpha,100+prior.beta)
 p.b_superior <- sum(b.samples > a.samples)/n.trials
+
+### Using dbeta with ggplot
+
 
 # p.b_superior
 # par(mfrow = c(2,1))
