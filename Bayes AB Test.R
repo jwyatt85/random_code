@@ -33,9 +33,6 @@ hist_plot <- ggplot(
   # alpha = .7, 
   aes(fill = ..count..)
   ) + 
-  geom_density(
-    col = 2
-  ) +
   scale_fill_gradient(
     "Count", 
     low = "green", 
