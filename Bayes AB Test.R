@@ -30,6 +30,7 @@ hist_plot <- ggplot(
   aes(V1)
 ) + geom_histogram(
   col = "blue", 
+  bins = 50,
   # alpha = .7, 
   aes(fill = ..count..)
   ) + 
