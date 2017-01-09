@@ -1,11 +1,13 @@
 
+library(ggplot2)
+library(grid)
+library(gridExtra)
 
 curve(dbeta(x, 1,1)) # these are our weak priors for the AB test.  We don't know or have any reason to believe A over B
 
 curve(dbeta(x, 36+4, 114+4), col = "blue")
 curve(dbeta(x, 50+4, 100+4), add = TRUE, col = "red")
  
-
 n.trials <- 100000
 prior.alpha <- 4
 prior.beta <- 4
@@ -19,10 +21,6 @@ p.b_superior <- sum(b.samples > a.samples)/n.trials
 # hist(b.samples/a.samples, breaks = 40)
 # lines(density(b.samples/a.samples), lwd = 2)
 # plot(ecdf(b.samples/a.samples)) 
-
-library(ggplot2)
-library(grid)
-library(gridExtra)
 
 data <- as.data.frame(b.samples/a.samples)
 names(data) <- "V1"
