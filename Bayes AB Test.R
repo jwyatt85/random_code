@@ -19,7 +19,6 @@ p.b_superior <- sum(b.samples > a.samples)/n.trials
 
 ### Using dbeta with ggplot
 
-
 # p.b_superior
 # par(mfrow = c(2,1))
 # hist(b.samples/a.samples, breaks = 40)
@@ -32,17 +31,8 @@ names(data) <- "V1"
 hist_plot <- ggplot(
   data = data, 
   aes(V1)
-) + geom_histogram(
-  col = "blue", 
-  bins = 30,
-  # alpha = .7, 
-  aes(fill = ..count..)
-  ) + 
-  scale_fill_gradient(
-    "Count", 
-    low = "green", 
-    high = "red"
-  ) + theme_bw()
+) + geom_histogram(col = "blue", bins = 30, aes(fill = ..count..)) + 
+  scale_fill_gradient("Count", low = "green", high = "red") + theme_bw()
 
 cdf_data <- data.frame(x = b.samples/a.samples)
 cdf_plot <- ggplot(
