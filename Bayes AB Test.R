@@ -55,7 +55,6 @@ cdf_plot <- ggplot(
   annotate("text", x = 2.0, y =.55, label = "95% confidence interval: Median") + 
   theme_bw()
   
-
 grid.arrange(hist_plot, cdf_plot)
 
 
