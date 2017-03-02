@@ -68,7 +68,7 @@ final_MD_reg_stats <- myfiles %>%
   })
 
 
-final_MD_reg_stats[[13]]$`100th House District`
+final_MD_reg_stats[[12]]$`100th House District` #Voter Reg stats for December at the 100th House Districts
 
 readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
  
