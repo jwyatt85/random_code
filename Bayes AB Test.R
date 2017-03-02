@@ -5,28 +5,38 @@ library(gridExtra)
 library(tidyr)
 
 curve(dbeta(x, 10,10)) # these are our weak priors for the AB test.  We don't know or have any reason to believe A over B
+curve(dbeta(x, 10, 100))
 
 # # curve(dbeta(x, 36+4, 114+4), col = "blue")
 # # curve(dbeta(x, 50+4, 100+4), add = TRUE, col = "red")
 
 x <- seq(0,1,length=100)
-db <- dbeta(x, 36+10, 114+10)
-db2 <- dbeta(x, 50+10, 100+10)
+
+db <- dbeta(x, 36+10, 114+100)
+db2 <- dbeta(x, 50+10, 100+100)
+db_base <- dbeta(x, 10, 100)
 
 ggplot() + geom_line(aes(x, db), colour = "blue", linetype = 1, size = 1) + 
-  geom_line(aes(x, db2), colour = "red", linetype = 1, size = 1) + theme_bw()
+geom_line(aes(x, db2), colour = "red", linetype = 1, size = 1)  + 
+  geom_line(aes(x, db_base), colour = "green", linetype =2 , size =1) + theme_bw()
 
 # ggplot() + geom_line(aes(x, db), colour = "blue") + 
 #   geom_line(aes(x, db2), colour = "red")
 
 n.trials <- 100000
-prior.alpha <- 4
-prior.beta <- 4
+prior.alpha <- 10
+prior.beta <- 100
 
 a.samples <- rbeta(n.trials,36+prior.alpha,114+prior.beta)
 b.samples <- rbeta(n.trials,50+prior.alpha,100+prior.beta)
 p.b_superior <- mean(b.samples > a.samples)
 p.b_superior 
+
+# m <- MASS::fitdistr(a.samples, dbeta,
+#                     start = list(shape1 = 1, shape2 = 1))
+# 
+# alpha0 <- m$estimate[1]
+# beta0 <- m$estimate[2]
 
 # probability that p.b is superior to A is 96% probability
 # or you could say a p-value of : .04167 (1-p.b_superior)
@@ -61,12 +71,11 @@ cdf_plot <- ggplot(
   
 grid.arrange(hist_plot, cdf_plot)
 
+########################################################
 #plot(ecdf(rbeta(1000, 1,1)))
 library(MASS)
 f <- rbeta(x,20,20)
-m <- fitdistr(f, dbeta,
-                    start = list(shape1 = 1, shape2 = 1))
-
+m <- fitdistr(f, dbeta, start = list(shape1 = 1, shape2 = 1))
 
 #### Varience Explained AB Test Bayesian Analysis ####
 library(dplyr)
