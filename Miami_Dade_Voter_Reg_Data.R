@@ -21,6 +21,7 @@ for(i in 1:12){
 }
 
 temp <- list.files("~/Desktop/MD_files/")
+setwd("~/Desktop/MD_files/")
 
 myfiles <- lapply(temp, function(i){
   readWorksheetFromFile(i, sheet=1) %>% 
@@ -33,7 +34,7 @@ final_MD_reg_stats <- myfiles %>%
   map(function(i){
     names(i) <- c("district", "demographic", "total_rvs", "dems", 'reps', 'npa')
     
-    try(for(x in seq_along(i$district)+1){
+    try(for(x in seq_along(i$district)){
       if(is.na(i$district[[x]])){
         i$district[[x]] <- i$district[[x - 1]]
       }
