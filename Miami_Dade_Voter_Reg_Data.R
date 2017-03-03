@@ -34,12 +34,11 @@ final_MD_reg_stats <- myfiles %>%
   map(function(i){
     names(i) <- c("district", "demographic", "total_rvs", "dems", 'reps', 'npa')
     
-    try(for(x in seq_along(i$district)){
+    for(x in seq_along(i$district)){
       if(is.na(i$district[[x]])){
         i$district[[x]] <- i$district[[x - 1]]
       }
     }
-    )
     
     i <- i %>%
       filter(demographic != 'District')
@@ -69,10 +68,10 @@ final_MD_reg_stats <- myfiles %>%
   })
 
 
-final_MD_reg_stats[[12]]$`100th House District` #Voter Reg stats for December at the 100th House Districts
+final_MD_reg_stats[[12]]$`100th House District` #Voter Reg stats for December(month 12) for the 100th House Districts
 
 readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
- 
+
 
 
 
