@@ -27,12 +27,21 @@ myfiles <- lapply(temp, function(i){
   readWorksheetFromFile(i, sheet=1) %>% 
     select(Col5, Col2, Col9, Col12, Col14, Col17) %>% 
     filter(Col2 != 'Time', Col2 != 'CloseDate') %>% 
+    mutate(
+      date = month.name[i]
+    ) %>% 
     as.data.frame()
 })
 
 final_MD_reg_stats <- myfiles %>% 
   map(function(i){
-    names(i) <- c("district", "demographic", "total_rvs", "dems", 'reps', 'npa')
+    names(i) <- c("district", 
+                  "demographic", 
+                  "total_rvs", 
+                  "dems", 
+                  'reps', 
+                  'npa', 
+                  'date')
     
     for(x in seq_along(i$district)){
       if(is.na(i$district[[x]])){
