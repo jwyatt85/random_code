@@ -79,6 +79,11 @@ final_MD_reg_stats <- myfiles %>%
 
 final_MD_reg_stats[[12]]$`100th House District` #Voter Reg stats for December(month 12) for the 100th House Districts
 
+x <- cbind(final_MD_reg_stats[[12]]$`100th House District`$percent_dems - final_MD_reg_stats[[01]]$`100th House District`$percent_dems)
+y <- final_MD_reg_stats[[12]]$`100th House District`$demographic
+
+cbind(y, x)
+
 readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
 
 
