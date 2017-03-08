@@ -85,23 +85,28 @@ df_list[[1]]$`116th House District` %>%
   filter(demographic == '**TOTAL**')
 
 totals <- lapply(1:length(month.name), function(i){
-  df_list[[i]]$`116th House District` %>% 
-    filter(demographic == '**TOTAL**')
+  df_list[[i]]$`116th House District`
 }) %>%
   bind_rows() %>% 
   tbl_df() %>% 
-  select(-c(demographic)) %>% 
   mutate(
     date = lubridate::ymd(paste0("2017 ", date, " 01"))
   )
 
 totals_final <- totals[order(totals$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa) %>% 
-  reshape2::melt(., id = c("date"))
+  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
+  reshape2::melt(., id = c("date", "demographic"))
 
-ggplot(totals_final, aes(x=date, y=value, color = variable)) +
-  geom_line()
+test <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
+  theme_bw() + facet_grid(variable ~ demographic) + geom_line()
+test 
 
+test2 <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
+  theme_bw() + facet_grid(. ~ demographic) + geom_line()
+test2
+
+# library(ggedit)
+# ggedit(test, viewer = broswerView)
 
 
 
