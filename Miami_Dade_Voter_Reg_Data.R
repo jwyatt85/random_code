@@ -3,6 +3,7 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(purrr)
   library(XLConnect)
+  library(ggplot2)
 })
 
 for(i in 1:12){
@@ -24,11 +25,12 @@ temp <- list.files("~/Desktop/MD_files/")
 setwd("~/Desktop/MD_files/")
 
 myfiles <- lapply(temp, function(i){
+  month_num <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))
   readWorksheetFromFile(i, sheet=1) %>% 
     select(Col5, Col2, Col9, Col12, Col14, Col17) %>% 
     filter(Col2 != 'Time', Col2 != 'CloseDate') %>% 
     mutate(
-      date = month.name[i]
+      date = month.name[month_num]
     ) %>% 
     as.data.frame()
 })
@@ -76,15 +78,31 @@ final_MD_reg_stats <- myfiles %>%
     
   })
 
+# readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
+df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
-final_MD_reg_stats[[12]]$`100th House District` #Voter Reg stats for December(month 12) for the 100th House Districts
+df_list[[1]]$`116th House District` %>% 
+  filter(demographic == '**TOTAL**')
 
-x <- cbind(final_MD_reg_stats[[12]]$`100th House District`$percent_dems - final_MD_reg_stats[[01]]$`100th House District`$percent_dems)
-y <- final_MD_reg_stats[[12]]$`100th House District`$demographic
+totals <- lapply(1:length(month.name), function(i){
+  df_list[[i]]$`116th House District` %>% 
+    filter(demographic == '**TOTAL**')
+}) %>%
+  bind_rows() %>% 
+  tbl_df() %>% 
+  select(-c(demographic)) %>% 
+  mutate(
+    date = lubridate::ymd(paste0("2017 ", date, " 01"))
+  )
 
-cbind(y, x)
+totals_final <- totals[order(totals$date),, drop = F] %>% 
+  select(date, percent_dems, percent_reps, percent_npa) %>% 
+  reshape2::melt(., id = c("date"))
 
-readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
+ggplot(totals_final, aes(x=date, y=value, color = variable)) +
+  geom_line()
+
+
 
 
 
