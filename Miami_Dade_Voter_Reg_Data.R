@@ -10,12 +10,12 @@ for(i in 1:12){
   if(i < 10){
     download.file(
       paste0('http://www.miamidade.gov/elections/STATS/2016/2016-0',i,'-voter-registration-statistics-districts.xls'),
-      destfile = paste0('MD_file_',i)
+      destfile = paste0('MD_file_2016_',i)
     )
   } else {
     download.file(
       paste0('http://www.miamidade.gov/elections/STATS/2016/2016-',i,'-voter-registration-statistics-districts.xls'),
-      destfile = paste0('MD_file_',i)
+      destfile = paste0('MD_file_2016_',i)
     )
   }
   cat("downloaded file # ", i)
@@ -25,12 +25,14 @@ temp <- list.files("~/Desktop/MD_files/")
 setwd("~/Desktop/MD_files/")
 
 myfiles <- lapply(temp, function(i){
-  month_num <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))
+  year <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))[1]
+  month_num <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))[2]
   readWorksheetFromFile(i, sheet=1) %>% 
     select(Col5, Col2, Col9, Col12, Col14, Col17) %>% 
     filter(Col2 != 'Time', Col2 != 'CloseDate') %>% 
     mutate(
-      date = month.name[month_num]
+      month = month.name[month_num],
+      year = year
     ) %>% 
     as.data.frame()
 })
@@ -43,7 +45,8 @@ final_MD_reg_stats <- myfiles %>%
                   "dems", 
                   'reps', 
                   'npa', 
-                  'date')
+                  'month', 
+                  'year')
     
     for(x in seq_along(i$district)){
       if(is.na(i$district[[x]])){
@@ -78,11 +81,11 @@ final_MD_reg_stats <- myfiles %>%
     
   })
 
-# readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
+readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
 df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
-df_list[[1]]$`116th House District` %>% 
-  filter(demographic == '**TOTAL**')
+# df_list[[1]]$`116th House District` %>% 
+#   filter(demographic == '**TOTAL**')
 
 totals <- lapply(1:length(month.name), function(i){
   df_list[[i]]$`116th House District`
