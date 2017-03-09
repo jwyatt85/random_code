@@ -114,8 +114,19 @@ df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 # df_list[[1]]$`116th House District` %>%
 #   filter(demographic == '**TOTAL**')
 
+#Jose F Diaz District
 totals <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`116th House District`
+}) %>%
+  bind_rows() %>% 
+  tbl_df() %>% 
+  mutate(
+    date = lubridate::ymd(paste0(year, month, " 01"))
+  )
+
+#Anitere's District - Holy shit.  There more Dems in her District now
+totals <- lapply(1:length(df_list), function(i){
+  df_list[[i]]$`37th Senatorial District`
 }) %>%
   bind_rows() %>% 
   tbl_df() %>% 
@@ -138,7 +149,7 @@ test2
 
 ### Just look at total Hispanic/age/etc. ###
 hispanic_trends <- lapply(1:length(df_list), function(i){
-  df_list[[i]]$`116th House District` %>% 
+  df_list[[i]]$`37th Senatorial District` %>% 
     filter(grepl("AGE", demographic))
 }) %>%
   bind_rows() %>% 
