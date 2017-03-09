@@ -81,19 +81,19 @@ final_MD_reg_stats <- myfiles %>%
     
   })
 
-readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
+# readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
 df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
-# df_list[[1]]$`116th House District` %>% 
-#   filter(demographic == '**TOTAL**')
+df_list[[1]]$`116th House District` %>%
+  filter(demographic == '**TOTAL**')
 
-totals <- lapply(1:length(month.name), function(i){
+totals <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`116th House District`
 }) %>%
   bind_rows() %>% 
   tbl_df() %>% 
   mutate(
-    date = lubridate::ymd(paste0("2017 ", date, " 01"))
+    date = lubridate::ymd(paste0(year, month, " 01"))
   )
 
 totals_final <- totals[order(totals$date),, drop = F] %>% 
@@ -108,8 +108,27 @@ test2 <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
   theme_bw() + facet_grid(. ~ demographic) + geom_line()
 test2
 
-# library(ggedit)
-# ggedit(test, viewer = broswerView)
+
+### Just look at total Hispanic ###
+hispanic_trends <- lapply(1:length(df_list), function(i){
+  df_list[[i]]$`116th House District` %>% 
+    filter(grepl("HISPANIC", demographic))
+}) %>%
+  bind_rows() %>% 
+  tbl_df() %>% 
+  mutate(
+    date = lubridate::ymd(paste0(year, month, " 01"))
+  )
+
+totals_final <- hispanic_trends[order(hispanic_trends$date),, drop = F] %>% 
+  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
+  reshape2::melt(., id = c("date", "demographic"))
+
+test <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
+  theme_bw() + geom_line() + facet_grid(. ~ demographic)
+test 
+
+
 
 
 
