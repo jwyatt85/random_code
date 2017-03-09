@@ -126,20 +126,20 @@ totals <- lapply(1:length(df_list), function(i){
 totals_final <- totals[order(totals$date),, drop = F] %>% 
   select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
   reshape2::melt(., id = c("date", "demographic"))
-
+# 
 # test <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
 #   theme_bw() + facet_grid(variable ~ demographic) + geom_line()
-# test 
+# test
 
 test2 <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
   theme_bw() + facet_grid(. ~ demographic) + geom_line()
 test2
 
 
-### Just look at total Hispanic ###
+### Just look at total Hispanic/age/etc. ###
 hispanic_trends <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`116th House District` %>% 
-    filter(grepl("HISPANIC", demographic))
+    filter(grepl("AGE", demographic))
 }) %>%
   bind_rows() %>% 
   tbl_df() %>% 
