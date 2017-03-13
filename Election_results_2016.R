@@ -58,8 +58,7 @@ counties_fl <- "http://www.politico.com/2016-election/results/map/president/flor
 
 
 
-
-
+### Trump by CD ####
 
 
 
