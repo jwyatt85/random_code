@@ -37,7 +37,7 @@ final_df
 library(dplyr)
 library(rvest)
 
-x <- "http://www.politico.com/2016-election/results/map/president/arizona" %>% 
+x <- "http://www.politico.com/2016-election/results/map/president/florida" %>% 
   xml2::read_html() %>% 
   rvest::html_table(fill=TRUE)
 
@@ -55,6 +55,8 @@ counties_fl <- "http://www.politico.com/2016-election/results/map/president/flor
   xml2::read_html() %>% 
   html_nodes("h4") %>% 
   html_text()
+
+
 
 
 
