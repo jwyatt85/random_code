@@ -54,7 +54,7 @@ setwd("~/Desktop/MD_files/")
 myfiles <- lapply(temp, function(i){
   year <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))[1]
   month_num <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))[2]
-  readWorksheetFromFile(i, sheet=1) %>% 
+  XLConnect::readWorksheetFromFile(i, sheet=1) %>% 
     select(Col5, Col2, Col9, Col12, Col14, Col17) %>% 
     filter(Col2 != 'Time', Col2 != 'CloseDate') %>% 
     mutate(
@@ -165,6 +165,8 @@ totals_final <- hispanic_trends[order(hispanic_trends$date),, drop = F] %>%
 test <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
   theme_bw() + geom_line() + facet_grid(. ~ demographic)
 test 
+
+
 
 
 
