@@ -31,3 +31,35 @@ final_df <- purrr::map(
     )
 
 final_df
+
+### County Election Results ####
+
+library(dplyr)
+library(rvest)
+
+x <- "http://www.politico.com/2016-election/results/map/president/arizona" %>% 
+  xml2::read_html() %>% 
+  rvest::html_table(fill=TRUE)
+
+states <- "http://www.politico.com/2016-election/results/map/president" %>% 
+  xml2::read_html() %>% 
+  html_nodes("h3") %>% 
+  html_text()
+
+counties_az <- "http://www.politico.com/2016-election/results/map/president/arizona" %>% 
+  xml2::read_html() %>% 
+  html_nodes("h4") %>% 
+  html_text()
+
+counties_fl <- "http://www.politico.com/2016-election/results/map/president/florida" %>% 
+  xml2::read_html() %>% 
+  html_nodes("h4") %>% 
+  html_text()
+
+
+
+
+
+
+
+
