@@ -5,17 +5,18 @@ suppressPackageStartupMessages({
   library(XLConnect)
   library(ggplot2)
 })
+setwd("~/Desktop/MD_files/")
 
 for(i in 1:12){
   if(i < 10){
     download.file(
-      paste0('http://www.miamidade.gov/elections/STATS/2016/2016-0',i,'-voter-registration-statistics-districts.xls'),
-      destfile = paste0('MD_file_2016_',i)
+      paste0('http://www.miamidade.gov/elections/STATS/2017/2017-0',i,'-voter-registration-statistics-districts.xls'),
+      destfile = paste0('MD_file_2017_',i)
     )
   } else {
     download.file(
       paste0('http://www.miamidade.gov/elections/STATS/2016/2016-',i,'-voter-registration-statistics-districts.xls'),
-      destfile = paste0('MD_file_2016_',i)
+      destfile = paste0('MD_file_2017_',i)
     )
   }
   cat("downloaded file # ", i)
@@ -23,27 +24,27 @@ for(i in 1:12){
 
 ### Links for 2014 data ####
 # looks like in July the switched to the new link version
-for(i in 1:12){
-  if(i >=7){
-    if(i < 10){
-      download.file(
-        paste0('http://www.miamidade.gov/elections/STATS/2014/2014-0',i,'-voter-registration-statistics-districts.xls'),
-        destfile = paste0('MD_file_2014_',i)
-      )
-    } else {
-      download.file(
-        paste0('http://www.miamidade.gov/elections/STATS/2014/2014-',i,'-voter-registration-statistics-districts.xls'),
-        destfile = paste0('MD_file_2014_',i)
-      )
-    }
-  } else {
-    download.file(
-      paste0('https://www.miamidade.gov/elections/STATS/2014/', tolower(month.abb)[i], '14dist.xls'),
-      destfile = paste0('MD_file_2014_',i)
-    )
-  }
-  cat("downloaded file # ", i, "\n")
-}  
+# for(i in 1:12){
+#   if(i >=7){
+#     if(i < 10){
+#       download.file(
+#         paste0('http://www.miamidade.gov/elections/STATS/2014/2014-0',i,'-voter-registration-statistics-districts.xls'),
+#         destfile = paste0('MD_file_2014_',i)
+#       )
+#     } else {
+#       download.file(
+#         paste0('http://www.miamidade.gov/elections/STATS/2014/2014-',i,'-voter-registration-statistics-districts.xls'),
+#         destfile = paste0('MD_file_2014_',i)
+#       )
+#     }
+#   } else {
+#     download.file(
+#       paste0('https://www.miamidade.gov/elections/STATS/2014/', tolower(month.abb)[i], '14dist.xls'),
+#       destfile = paste0('MD_file_2014_',i)
+#     )
+#   }
+#   cat("downloaded file # ", i, "\n")
+# }  
 
 
 ### Save it all ####
@@ -108,7 +109,7 @@ final_MD_reg_stats <- myfiles %>%
     
   })
 
-# readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
+readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
 df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
 # df_list[[1]]$`116th House District` %>%
