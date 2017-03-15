@@ -148,7 +148,7 @@ percent_population <- function(district){
 
 percent_population("116th House District")
 
-#Jose F Diaz
+#Jose Felix Diaz
 totals <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`116th House District`
 }) %>%
@@ -168,7 +168,7 @@ names(totals_final) <- c("year", "demographic", "party", "percent")
 
 test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
   theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
-        axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
+        axis.text.x = element_text(angle=90, size = 6)) + 
   facet_grid(. ~ demographic) + geom_line() + 
   ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Diaz")) + 
   xlab("Year") + ylab("Percent of Registered Voters")
