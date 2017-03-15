@@ -127,10 +127,23 @@ totals <- lapply(1:length(df_list), function(i){
     date = lubridate::ymd(paste0(year, month, " 01"))
   )
 
-#Frank Artilles
+totals_final <- totals[order(totals$date),, drop = F] %>% 
+  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
+  reshape2::melt(., id = c("date", "demographic"))
+
+names(totals_final) <- c("year", "demographic", "party", "percent")
+
+test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
+  theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
+        axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
+  facet_grid(. ~ demographic) + geom_line() + 
+  ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Diaz")) + 
+  xlab("Year") + ylab("Percent of Registered Voters")
+test2
+
+#### Frank Artiles ####
 totals <- lapply(1:length(df_list), function(i){
-  df_list[[i]]$`40th Senatorial District` %>% 
-    filter(grepl("AGE", demographic) | grepl("TOTAL", demographic))
+  df_list[[i]]$`40th Senatorial District`
 }) %>%
   bind_rows() %>% 
   tbl_df() %>% 
@@ -147,7 +160,8 @@ names(totals_final) <- c("year", "demographic", "party", "percent")
 test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
   theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
   axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
-  facet_grid(. ~ demographic) + geom_line() + ggtitle("40th Senatorial District - Artilles") + 
+  facet_grid(. ~ demographic) + geom_line() + 
+  ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Artiles")) + 
   xlab("Year") + ylab("Percent of Registered Voters")
 test2
 
@@ -164,13 +178,14 @@ totals <- lapply(1:length(df_list), function(i){
 totals_final <- totals[order(totals$date),, drop = F] %>% 
   select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
   reshape2::melt(., id = c("date", "demographic"))
-# 
-# test <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
-#   theme_bw() + facet_grid(variable ~ demographic) + geom_line()
-# test
 
-test2 <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
-  theme_bw() + facet_grid(. ~ demographic) + geom_line()
+names(totals_final) <- c("year", "demographic", "party", "percent")
+
+test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
+  theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
+        axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
+  facet_grid(. ~ demographic) + geom_line() + ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Flores")) + 
+  xlab("Year") + ylab("Percent of Registered Voters")
 test2
 
 
