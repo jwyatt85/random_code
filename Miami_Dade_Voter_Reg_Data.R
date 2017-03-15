@@ -1,12 +1,16 @@
 
+### Load Packages ####
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(purrr)
-  library(XLConnect)
-  library(ggplot2)
+  suppressWarnings({
+    library(dplyr)
+    library(purrr)
+    library(XLConnect)
+    library(ggplot2)
+  })
 })
-setwd("~/Desktop/MD_files/")
 
+### Loop download ####
+setwd("~/Desktop/MD_files/")
 for(i in 1:12){
   if(i < 10){
     download.file(
@@ -47,11 +51,10 @@ for(i in 1:12){
 # }  
 
 
-### Save it all ####
+### Data Munging and Saving ####
 temp <- list.files("~/Desktop/MD_files/")
 setwd("~/Desktop/MD_files/")
 
-### Mutates ####
 myfiles <- lapply(temp, function(i){
   year <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))[1]
   month_num <- unique(na.omit(as.numeric(unlist(strsplit(unlist(i), "[^0-9]+")))))[2]
@@ -110,10 +113,9 @@ final_MD_reg_stats <- myfiles %>%
   })
 
 readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
-df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
-# df_list[[1]]$`116th House District` %>%
-#   filter(demographic == '**TOTAL**')
+### Analysis ####
+df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
 #Jose F Diaz District
 totals <- lapply(1:length(df_list), function(i){
@@ -125,7 +127,31 @@ totals <- lapply(1:length(df_list), function(i){
     date = lubridate::ymd(paste0(year, month, " 01"))
   )
 
-#Anitere's District - Holy shit.  There more Dems in her District now
+#Frank Artilles
+totals <- lapply(1:length(df_list), function(i){
+  df_list[[i]]$`40th Senatorial District` %>% 
+    filter(grepl("AGE", demographic) | grepl("TOTAL", demographic))
+}) %>%
+  bind_rows() %>% 
+  tbl_df() %>% 
+  mutate(
+    date = lubridate::ymd(paste0(year, month, " 01"))
+  )
+
+totals_final <- totals[order(totals$date),, drop = F] %>% 
+  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
+  reshape2::melt(., id = c("date", "demographic"))
+
+names(totals_final) <- c("year", "demographic", "party", "percent")
+
+test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
+  theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
+  axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
+  facet_grid(. ~ demographic) + geom_line() + ggtitle("40th Senatorial District - Artilles") + 
+  xlab("Year") + ylab("Percent of Registered Voters")
+test2
+
+#Anitere's District - There more Dems in her District now
 totals <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`37th Senatorial District`
 }) %>%
