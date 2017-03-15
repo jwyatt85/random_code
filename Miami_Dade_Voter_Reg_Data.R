@@ -189,25 +189,6 @@ test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
 test2
 
 
-### Just look at total Hispanic/age/etc. ###
-hispanic_trends <- lapply(1:length(df_list), function(i){
-  df_list[[i]]$`37th Senatorial District` %>% 
-    filter(grepl("AGE", demographic))
-}) %>%
-  bind_rows() %>% 
-  tbl_df() %>% 
-  mutate(
-    date = lubridate::ymd(paste0(year, month, " 01"))
-  )
-
-totals_final <- hispanic_trends[order(hispanic_trends$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
-  reshape2::melt(., id = c("date", "demographic"))
-
-test <- ggplot(totals_final, aes(x=date, y=value, color = variable)) +
-  theme_bw() + geom_line() + facet_grid(. ~ demographic)
-test 
-
 
 
 
