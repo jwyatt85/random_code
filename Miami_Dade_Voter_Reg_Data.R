@@ -220,6 +220,7 @@ district <- "37th Senatorial District" # Jose Javier Rodriguez
 district <- "38th Senatorial District" # Campbell
 district <- "36th Senatorial District" # Rene Garcia
 
-plot_district(district)
+plot_district(district, year = 2016)
+plot_district(district, year = "all")
 
 
