@@ -118,7 +118,6 @@ readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds'
 ### Analysis ####
 df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
-#run this function to get most recent percent population by demographic
 percent_population <- function(district){
   
   filter_df <- lapply(1:length(df_list), function(i){
@@ -146,94 +145,43 @@ percent_population <- function(district){
   return(return_df)
 }
 
-percent_population("116th House District")
+district <- "40th Senatorial District"
+percent_population(district)
 
-#Jose Felix Diaz
-totals <- lapply(1:length(df_list), function(i){
-  df_list[[i]]$`116th House District`
-}) %>%
-  bind_rows() %>% 
-  tbl_df() %>% 
-  mutate(
-    date = lubridate::ymd(paste0(year, month, " 01"))
-  ) %>% 
-  left_join(.,percent_population(unique(.$district)), by = "demographic")
+plot_district <- function(district){
+  
+  totals <- lapply(1:length(df_list), function(i){
+    df_list[[i]][[district]]
+  }) %>%
+    bind_rows() %>% 
+    tbl_df() %>% 
+    mutate(
+      date = lubridate::ymd(paste0(year, month, " 01"))
+    ) %>% 
+    left_join(.,percent_population(unique(.$district)), by = "demographic")
+  
+  totals_final <- totals[order(totals$date),, drop = F] %>% 
+    select(date, percent_dems, percent_reps, percent_npa, new_demographic) %>% 
+    reshape2::melt(., id = c("date", "new_demographic"))
+  
+  names(totals_final) <- c("year", "demographic", "party", "percent")
+  
+  export_plot <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
+    theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
+          axis.text.x = element_text(angle=90, size = 6)) + 
+    facet_grid(. ~ demographic) + geom_line() + 
+    ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Diaz")) + 
+    xlab("Year") + ylab("Percent of Registered Voters")
+  
+  return(export_plot)
+  
+}
 
+district <- "40th Senatorial District" # Frank Artiles
+district <- "116th House District"     # Jose F Diaz
+district <- "39th Senatorial District" #Aniter Flores
+district <- "37th Senatorial District" #Jose Javier Rodriguez
 
-totals_final <- totals[order(totals$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa, new_demographic) %>% 
-  reshape2::melt(., id = c("date", "new_demographic"))
-
-names(totals_final) <- c("year", "demographic", "party", "percent")
-
-test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
-  theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
-        axis.text.x = element_text(angle=90, size = 6)) + 
-  facet_grid(. ~ demographic) + geom_line() + 
-  ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Diaz")) + 
-  xlab("Year") + ylab("Percent of Registered Voters")
-test2
-
-#Frank Artiles
-totals <- lapply(1:length(df_list), function(i){
-  df_list[[i]]$`40th Senatorial District`
-}) %>%
-  bind_rows() %>% 
-  tbl_df() %>% 
-  mutate(
-    date = lubridate::ymd(paste0(year, month, " 01"))
-  )%>% 
-  left_join(.,percent_population(unique(.$district)), by = "demographic")
-
-
-totals_final <- totals[order(totals$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa, new_demographic) %>% 
-  reshape2::melt(., id = c("date", "new_demographic"))
-
-names(totals_final) <- c("year", "demographic", "party", "percent")
-
-test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
-  theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
-        axis.text.x = element_text(angle=90, size = 5)) + 
-  facet_grid(. ~ demographic) + geom_line() + 
-  ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Artiles")) + 
-  xlab("Year") + ylab("Percent of Registered Voters")
-test2
-
-
-#Anitere Flores
-totals <- lapply(1:length(df_list), function(i){
-  df_list[[i]]$`37th Senatorial District`
-}) %>%
-  bind_rows() %>% 
-  tbl_df() %>% 
-  mutate(
-    date = lubridate::ymd(paste0(year, month, " 01"))
-  )%>% 
-  left_join(.,percent_population(unique(.$district)), by = "demographic")
-
-totals_final <- totals[order(totals$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa, new_demographic) %>% 
-  reshape2::melt(., id = c("date", "new_demographic"))
-
-names(totals_final) <- c("year", "demographic", "party", "percent")
-
-test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
-  theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
-        axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
-  facet_grid(. ~ demographic) + geom_line() + 
-  ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Flores")) + 
-  xlab("Year") + ylab("Percent of Registered Voters")
-test2
-
-
-
-
-
-
-
-
-
-
+plot_district(district)
 
 
