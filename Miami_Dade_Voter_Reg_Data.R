@@ -140,7 +140,7 @@ percent_population <- function(district){
     filter(year == "2017") %>% 
     filter(month == min(month)) %>% 
     mutate(percent_total_population = total_rvs / use_number) %>% 
-    mutate(new_demographic = paste0(demographic, " - ", round(percent_total_population, 2)*100, "% of pop")) %>% 
+    mutate(new_demographic = paste0(demographic, " - ", round(percent_total_population, 4)*100, "% of pop")) %>% 
     select(demographic, new_demographic)
   
   return(return_df)
