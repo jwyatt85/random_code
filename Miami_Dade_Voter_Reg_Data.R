@@ -114,8 +114,39 @@ final_MD_reg_stats <- myfiles %>%
 
 readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds')
 
+
 ### Analysis ####
 df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
+
+#run this function to get most recent percent population by demographic
+percent_population <- function(district){
+  
+  filter_df <- lapply(1:length(df_list), function(i){
+    df_list[[i]][[district]]
+  }) %>%
+    bind_rows() %>% 
+    tbl_df() %>% 
+    filter(year == "2017") %>% 
+    filter(month == min(month)) %>% 
+    filter(grepl("TOTAL", demographic))
+  
+  use_number <- as.numeric(filter_df$total_rvs)
+  
+  return_df <- lapply(1:length(df_list), function(i){
+    df_list[[i]][[district]]
+  }) %>%
+    bind_rows() %>% 
+    tbl_df() %>% 
+    filter(year == "2017") %>% 
+    filter(month == min(month)) %>% 
+    mutate(percent_total_population = total_rvs / use_number) %>% 
+    mutate(new_demographic = paste0(demographic, " - ", round(percent_total_population, 2)*100, "% of pop")) %>% 
+    select(demographic, new_demographic)
+  
+  return(return_df)
+}
+
+percent_population("116th House District")
 
 #Jose F Diaz
 totals <- lapply(1:length(df_list), function(i){
@@ -125,11 +156,13 @@ totals <- lapply(1:length(df_list), function(i){
   tbl_df() %>% 
   mutate(
     date = lubridate::ymd(paste0(year, month, " 01"))
-  )
+  ) %>% 
+  left_join(. ,percent_population(unique(district)), by = "demographic")
+
 
 totals_final <- totals[order(totals$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
-  reshape2::melt(., id = c("date", "demographic"))
+  select(date, percent_dems, percent_reps, percent_npa, new_demographic) %>% 
+  reshape2::melt(., id = c("date", "new_demographic"))
 
 names(totals_final) <- c("year", "demographic", "party", "percent")
 
@@ -149,17 +182,19 @@ totals <- lapply(1:length(df_list), function(i){
   tbl_df() %>% 
   mutate(
     date = lubridate::ymd(paste0(year, month, " 01"))
-  )
+  )%>% 
+  left_join(. ,percent_population(unique(district)), by = "demographic")
+
 
 totals_final <- totals[order(totals$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
-  reshape2::melt(., id = c("date", "demographic"))
+  select(date, percent_dems, percent_reps, percent_npa, new_demographic) %>% 
+  reshape2::melt(., id = c("date", "new_demographic"))
 
 names(totals_final) <- c("year", "demographic", "party", "percent")
 
 test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
   theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
-  axis.text.x = element_text(angle=90, size = 7, hjust = 1)) + 
+        axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
   facet_grid(. ~ demographic) + geom_line() + 
   ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Artiles")) + 
   xlab("Year") + ylab("Percent of Registered Voters")
@@ -174,21 +209,22 @@ totals <- lapply(1:length(df_list), function(i){
   tbl_df() %>% 
   mutate(
     date = lubridate::ymd(paste0(year, month, " 01"))
-  )
+  )%>% 
+  left_join(. ,percent_population(unique(district)), by = "demographic")
 
 totals_final <- totals[order(totals$date),, drop = F] %>% 
-  select(date, percent_dems, percent_reps, percent_npa, demographic) %>% 
-  reshape2::melt(., id = c("date", "demographic"))
+  select(date, percent_dems, percent_reps, percent_npa, new_demographic) %>% 
+  reshape2::melt(., id = c("date", "new_demographic"))
 
 names(totals_final) <- c("year", "demographic", "party", "percent")
 
 test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
   theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
         axis.text.x = element_text(angle=90, hjust=1, size = 8)) + 
-  facet_grid(. ~ demographic) + geom_line() + ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Flores")) + 
+  facet_grid(. ~ demographic) + geom_line() + 
+  ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Flores")) + 
   xlab("Year") + ylab("Percent of Registered Voters")
 test2
-
 
 
 
