@@ -116,6 +116,16 @@ readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds'
 
 
 ### Analysis ####
+
+suppressPackageStartupMessages({
+  suppressWarnings({
+    library(dplyr)
+    library(purrr)
+    library(XLConnect)
+    library(ggplot2)
+  })
+})
+
 df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
 percent_population <- function(district){
@@ -170,7 +180,7 @@ plot_district <- function(district){
     theme(strip.text.x = element_text(size = 10, colour = "#990000", angle = 90), 
           axis.text.x = element_text(angle=90, size = 6)) + 
     facet_grid(. ~ demographic) + geom_line() + 
-    ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district), " - Diaz")) + 
+    ggtitle(paste0("Percent Registration by Party from 2014 - 2017: ", unique(totals$district))) + 
     xlab("Year") + ylab("Percent of Registered Voters")
   
   return(export_plot)
