@@ -189,8 +189,10 @@ plot_district <- function(district){
 
 district <- "40th Senatorial District" # Frank Artiles
 district <- "116th House District"     # Jose F Diaz
-district <- "39th Senatorial District" #Aniter Flores
-district <- "37th Senatorial District" #Jose Javier Rodriguez
+district <- "39th Senatorial District" # Anitere Flores
+district <- "37th Senatorial District" # Jose Javier Rodriguez
+district <- "38th Senatorial District" # Campbell
+district <- "36th Senatorial District" # Rene Garcia
 
 plot_district(district)
 
