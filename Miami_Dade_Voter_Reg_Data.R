@@ -117,7 +117,7 @@ readr::write_rds(final_MD_reg_stats, '~/Desktop/MD_files/final_MD_reg_stats.rds'
 ### Analysis ####
 df_list <- readr::read_rds("~/Desktop/MD_files/final_MD_reg_stats.rds")
 
-#Jose F Diaz District
+#Jose F Diaz
 totals <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`116th House District`
 }) %>%
@@ -141,7 +141,7 @@ test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
   xlab("Year") + ylab("Percent of Registered Voters")
 test2
 
-#### Frank Artiles ####
+#Frank Artiles
 totals <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`40th Senatorial District`
 }) %>%
@@ -165,7 +165,7 @@ test2 <- ggplot(totals_final, aes(x=year, y=percent, color = party)) +
   xlab("Year") + ylab("Percent of Registered Voters")
 test2
 
-#Anitere's District - There more Dems in her District now
+#Anitere Flores
 totals <- lapply(1:length(df_list), function(i){
   df_list[[i]]$`37th Senatorial District`
 }) %>%
